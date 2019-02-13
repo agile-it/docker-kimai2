@@ -5,7 +5,12 @@
 
 FROM php:7-apache
 
-
+ENV SQL_PROTOCOL
+ENV SQL_DATABASE
+ENV SQL_PASSWORD
+ENV SQL_HOST
+ENV APP_ENV
+ENV APP_SECRET
 
 RUN apt-get update && \
     apt-get install -y \

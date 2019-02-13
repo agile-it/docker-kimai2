@@ -8,7 +8,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 COPY 000-default.conf /etc/apache2/sites-enabled/000-default.conf
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    unzip git sudo libpng-dev zlib1g-dev libicu-dev g++ \
+    unzip git sudo libpng-dev libzip-dev zlib1g-dev libicu-dev g++ \
   && docker-php-ext-configure intl \
   && docker-php-ext-install intl \
   && docker-php-ext-configure gd \
@@ -32,15 +32,13 @@ RUN mkdir -p /var/www \
   && chown -R :www-data . \
   && chmod -R g+r . \
   && chmod -R g+rw var/ \
-  && cp .env.dist .env \
   && sudo -u www-data composer install --no-dev --optimize-autoloader
+
+COPY .env /var/www/kimai2/.env
 
 RUN  cd /var/www/kimai2 \
   && bin/console doctrine:database:create \
   && bin/console doctrine:schema:create \
   && bin/console doctrine:migrations:version --add --all \
   && bin/console cache:warmup --env=prod \
-  && bin/console kimai:create-user username admin@example.com ROLE_SUPER_ADMIN admin \
-  && chmod 777 /var/www/kimai2/var/data/kimai.sqlite
-
-VOLUME /var/www/kimai2/var/data
+  && bin/console kimai:create-user username admin@example.com ROLE_SUPER_ADMIN admin

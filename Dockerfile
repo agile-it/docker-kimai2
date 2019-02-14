@@ -24,7 +24,7 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 
 RUN mkdir -p /var/www \
   && cd /var/www \
-  && git clone https://github.com/kevinpapst/kimai2.git \
+  && git clone https://github.com/agileit/kimai2.git \
   && cd kimai2 \
   && chown -R www-data:www-data /var/www \
   && chown -R :www-data . \

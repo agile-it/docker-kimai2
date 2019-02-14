@@ -1,20 +1,18 @@
 FROM php:7-apache
 MAINTAINER Michael Friedrich <Michael.Friedrich@gmx.de>
 
-EXPOSE 80
-
 ARG DEBIAN_FRONTEND=noninteractive
 
 COPY 000-default.conf /etc/apache2/sites-enabled/000-default.conf
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    unzip git sudo libpng-dev libzip-dev zlib1g-dev libicu-dev g++ \
-  && docker-php-ext-configure intl \
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends unzip git zip \
+    libpng-dev libicu-dev libzip-dev sudo \
   && docker-php-ext-install intl \
-  && docker-php-ext-configure gd \
   && docker-php-ext-install gd \
-  && docker-php-ext-configure zip \
   && docker-php-ext-install zip \
+  && docker-php-ext-install pdo \
+  && docker-php-ext-install pdo_mysql \
   && rm -rf /var/lib/apt/lists/*
 
 
@@ -34,11 +32,13 @@ RUN mkdir -p /var/www \
   && chmod -R g+rw var/ \
   && sudo -u www-data composer install --no-dev --optimize-autoloader
 
+USER www-data
+
 COPY .env /var/www/kimai2/.env
 
-RUN  cd /var/www/kimai2 \
-  && bin/console doctrine:database:create \
-  && bin/console doctrine:schema:create \
-  && bin/console doctrine:migrations:version --add --all \
-  && bin/console cache:warmup --env=prod \
-  && bin/console kimai:create-user username admin@example.com ROLE_SUPER_ADMIN admin
+USER root
+
+COPY entrypoint.sh /
+RUN chmod 755 /entrypoint.sh
+
+CMD ["bash","/entrypoint.sh"]

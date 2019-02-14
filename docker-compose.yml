@@ -16,11 +16,14 @@ services:
       APP_ENV: prod
       APP_SECRET: alksdlklakjashjkdkjhawukajhfkj89789a7s
       SQL_PROTOCOL: mysql
-      SQL_DATABASE: kimai
+      SQL_DATABASE: kimai_db
       SQL_PASSWORD: example
       SQL_HOST: kimai2db
   kimai2db:
-    image: mysql:8
+    image: mysql:5.7
     restart: always
+    ports:
+      - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: example
+    command: mysqld --sql-mode=""

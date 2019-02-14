@@ -28,6 +28,8 @@ services:
       - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: example
+    volumes:
+      - ./data/kimaidb:/var/lib/mysql
     command: mysqld --sql-mode=""
     healthcheck:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]

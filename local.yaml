@@ -1,0 +1,7 @@
+kimai:
+    user:
+        registration: false
+
+admin_lte:
+    routes:
+        adminlte_registration: ~

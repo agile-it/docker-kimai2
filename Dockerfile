@@ -18,7 +18,7 @@ RUN apt-get update && \
   && mv composer.phar /usr/local/bin/composer \
   && mkdir -p /var/www \
   && cd /var/www \
-  && git clone https://github.com/kevinpapst/kimai2.git \
+  && git clone -b 0.7 --depth 1 https://github.com/kevinpapst/kimai2.git \
   && cd kimai2 \
   && chown -R www-data:www-data /var/www \
   && chown -R :www-data . \
@@ -35,7 +35,13 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-av
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
 
+COPY .env /var/www/kimai2/.env
+COPY local.yaml /var/www/kimai2/config/packages/local.yaml
+RUN chown www-data:www-data /var/www/kimai2/.env
+RUN chown www-data:www-data /var/www/kimai2/config/packages/local.yaml
+
 COPY entrypoint.sh /
+
 RUN chmod 755 /entrypoint.sh
 
 CMD ["bash","/entrypoint.sh"]

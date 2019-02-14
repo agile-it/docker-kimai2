@@ -1,4 +1,4 @@
-version: '2'
+version: '2.1'
 
 services:
   kimai2:
@@ -10,7 +10,9 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - kimai2db
+      kimai2db:
+        condition: service_healthy
+
     # volumes:
     environment:
       APP_ENV: prod
@@ -27,3 +29,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: example
     command: mysqld --sql-mode=""
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 10s
+      retries: 20

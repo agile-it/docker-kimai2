@@ -4,6 +4,7 @@ MAINTAINER Michael Friedrich <Michael.Friedrich@gmx.de>
 ARG DEBIAN_FRONTEND=noninteractive
 
 COPY 000-default.conf /etc/apache2/sites-enabled/000-default.conf
+COPY production.conf /etc/apache2/conf-enabled/production.conf
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends unzip git zip \
@@ -13,10 +14,8 @@ RUN apt-get update && \
   && docker-php-ext-install zip \
   && docker-php-ext-install pdo \
   && docker-php-ext-install pdo_mysql \
-  && rm -rf /var/lib/apt/lists/*
-
-
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+  && rm -rf /var/lib/apt/lists/* \
+  && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
   && php composer-setup.php --quiet \
   && rm composer-setup.php \
   && mv composer.phar /usr/local/bin/composer
@@ -24,7 +23,7 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 
 RUN mkdir -p /var/www \
   && cd /var/www \
-  && git clone https://github.com/agileit/kimai2.git \
+  && git clone https://github.com/agile-it/kimai2.git \
   && cd kimai2 \
   && chown -R www-data:www-data /var/www \
   && chown -R :www-data . \

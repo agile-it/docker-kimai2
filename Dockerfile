@@ -34,13 +34,6 @@ ENV APACHE_DOCUMENT_ROOT /var/www/kimai2/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
-#USER www-data
-
-#COPY .env /var/www/kimai2/.env
-
-
-
-#USER root
 
 COPY entrypoint.sh /
 RUN chmod 755 /entrypoint.sh
